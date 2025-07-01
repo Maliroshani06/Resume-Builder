@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fill Your Resume</h1>
+    <form id="resume-form">
+        <!-- Dynamic Fields Will Be Added Here -->
+        <button type="button" onclick="generateResume()">Generate Resume</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const selectedFields = JSON.parse(localStorage.getItem("selectedFields"));
+            const form = document.getElementById("resume-form");
+
+            selectedFields.forEach(field => {
+                const formGroup = document.createElement("div");
+                formGroup.classList.add("form-group");
+
+                const label = document.createElement("label");
+                label.textContent = field.charAt(0).toUpperCase() + field.slice(1) + ":";
+
+                let input;
+                if (field === "address" || field === "skills" || field === "experience" || field === "education") {
+                    input = document.createElement("textarea");
+                    input.rows = 3;
+                } else {
+                    input = document.createElement("input");
+                    input.type = "text";
+                }
+
+                input.name = field;
+                input.id = field;
+
+                formGroup.appendChild(label);
+                formGroup.appendChild(input);
+                form.insertBefore(formGroup, form.lastElementChild);
+            });
+        });
+
+        function generateResume() {
+            const formData = new FormData(document.getElementById("resume-form"));
+            const resumeData = {};
+
+            for (const [key, value] of formData.entries()) {
+                resumeData[key] = value;
+            }
+
+            // Save resume data to localStorage for later use in the resume template
+            localStorage.setItem("resumeData", JSON.stringify(resumeData));
+
+            // Redirect to the resume template page
+            window.location.href = "resume.html";
+        }
+        function generateResumeHTML(resumeData, template) {
+    const resumeTemplate = template === 1 ? "template-1" : (template === 2 ? "template-2" : "template-3");
+
+    let contactInfo = '';
+    if (resumeData.email || resumeData.phone || resumeData.address) {
+        contactInfo = `
+            <div class="section">
+                <h3>Contact Information</h3>
+                ${resumeData.email ? `<p><strong>Email:</strong> ${resumeData.email}</p>` : ""}
+                ${resumeData.phone ? `<p><strong>Phone:</strong> ${resumeData.phone}</p>` : ""}
+                ${resumeData.address ? `<p><strong>Address:</strong> ${resumeData.address}</p>` : ""}
+            </div>`;
+    }
+
+    let skills = '';
+    if (resumeData.skills) {
+        const skillList = resumeData.skills.split(',').map(skill => `<li>${skill.trim()}</li>`).join('');
+        skills = `
+            <div class="section">
+                <h3>Skills</h3>
+                <ul>${skillList}</ul>
+            </div>`;
+    }
+
+    let experience = '';
+    if (resumeData.experience) {
+        experience = `
+            <div class="section">
+                <h3>Experience</h3>
+                <p>${resumeData.experience}</p>
+            </div>`;
+    }
+
+    let education = '';
+    if (resumeData.education) {
+        education = `
+            <div class="section">
+                <h3>Education</h3>
+                <p>${resumeData.education}</p>
+            </div>`;
+    }
+
+    return `
+        <div class="resume ${resumeTemplate}">
+            <h2>${resumeData.name || "Your Name"}</h2>
+            ${contactInfo}
+            ${skills}
+            ${experience}
+            ${education}
+        </div>
+    `;
+}
+
+    </script>
+</body>
+</html>

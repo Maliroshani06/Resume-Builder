@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Fields</h1>
+    <form id="field-selection-form">
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="name"> Full Name</label>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="email"> Email</label>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="phone"> Phone</label>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="address"> Address</label>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="skills"> Skills</label>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="experience"> Work Experience</label>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="education"> Education</label>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" name="field" value="references"> References</label>
+        </div>
+        <button type="button" onclick="goToForm()">Proceed</button>
+    </form>
+
+    <script>
+        function goToForm() {
+            const selectedFields = Array.from(
+                document.querySelectorAll('input[name="field"]:checked')
+            ).map(input => input.value);
+
+            if (selectedFields.length === 0) {
+                alert("Please select at least one field.");
+                return;
+            }
+
+            // Save selected fields to local storage
+            localStorage.setItem("selectedFields", JSON.stringify(selectedFields));
+
+            // Redirect to form page
+            window.location.href = "form.html";
+        }
+    </script>
+</body>
+</html>
